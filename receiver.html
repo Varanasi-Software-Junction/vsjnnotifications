@@ -6,16 +6,33 @@
     <title>Notification Receiver</title>
 </head>
 <body>
-    <h1>Notification:</h1>
-    <div id="notification"></div>
-
     <script>
         // Function to fetch the JSON message
         async function fetchNotification() {
             try {
-                const response = await fetch('https://varanasi-software-junction.github.io/vsjnnotifications/message.json');
+                const response = await fetch('https://<your-username>.github.io/<repo-name>/message.json');
                 const data = await response.json();
-                document.getElementById('notification').innerText = data.message;
+                
+                // Check if the browser supports notifications
+                if ('Notification' in window) {
+                    // Request notification permission from the user
+                    if (Notification.permission === 'granted') {
+                        // Display the notification
+                        new Notification('New Message', {
+                            body: data.message,
+                        });
+                    } else if (Notification.permission !== 'denied') {
+                        Notification.requestPermission().then(permission => {
+                            if (permission === 'granted') {
+                                new Notification('New Message', {
+                                    body: data.message,
+                                });
+                            }
+                        });
+                    }
+                } else {
+                    console.error('This browser does not support notifications.');
+                }
             } catch (error) {
                 console.error('Error fetching the message:', error);
             }

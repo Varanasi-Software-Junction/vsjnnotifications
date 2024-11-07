@@ -1,0 +1,1 @@
+json path https://varanasi-software-junction.github.io/vsjnnotifications/message.json
