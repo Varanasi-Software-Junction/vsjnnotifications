@@ -3,23 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notification Receiver with Polling</title>
+    <title>Notification Receiver with Polling and Local Storage</title>
 </head>
 <body>
     <script>
-        let lastMessage = ''; // Variable to store the last message to avoid duplicate notifications
-
         // Function to fetch the JSON message and show a notification
         async function fetchNotification() {
-            let timedate=Date.now();
-            console.table(timedate);
             try {
-                const response = await fetch('https://varanasi-software-junction.github.io/vsjnnotifications/message.json');
+                const response = await fetch('https://<your-username>.github.io/<repo-name>/message.json');
                 const data = await response.json();
                 
-                // Check if the message has changed
-                if (data.message !== lastMessage) {
-                    lastMessage = data.message; // Update the last message
+                // Retrieve the last stored message number from local storage
+                const storedMessageNo = localStorage.getItem('lastMessageNo') || 0;
+
+                // Check if the new message number is different
+                if (data.messageNo > storedMessageNo) {
+                    // Store the new message number in local storage
+                    localStorage.setItem('lastMessageNo', data.messageNo);
 
                     // Check if the browser supports notifications
                     if ('Notification' in window) {
